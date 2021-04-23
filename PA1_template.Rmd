@@ -7,19 +7,80 @@ output:
 
 
 ## Loading and preprocessing the data
+In this section the dataset of activity monitoring from a csv file is loaded into a R dataframe to be ready for our analysis in next parts.
+```{r}
 
+activity<-read.csv('activity.csv')
+activity$date <-as.Date(activity$date)
+```
 
 
 ## What is mean total number of steps taken per day?
 
+The first table shows the total steps per day.  The plot shows the histogram of total number of steps taken each day. The second and third table demonstrate the mean and median step taken per day respectively.
+```{r}
+
+library(dplyr)
+library(ggplot2)
+total_steps <- activity %>% group_by(date) %>% summarize(total_steps=sum(steps,na.rm=TRUE))
+
+print(total_steps)
+
+
+mean_steps <- activity %>% group_by(date) %>% summarize(mean_steps=mean(steps,na.rm=TRUE))
+
+
+
+median_steps <- activity %>% group_by(date) %>% summarize(median_steps=median(steps,na.rm=TRUE))
+
+
+ggplot(data=total_steps, aes(x=total_steps))+geom_histogram()
+
+print(mean_steps)
+print(median_steps)
+```
 
 
 ## What is the average daily activity pattern?
+The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average, intervals 835 has maximum number of steps across all days.
+```{r}
+average_interval5 <- activity %>% group_by(interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
+ggplot(average_interval5,aes(x=interval, y=mean_interval))+geom_line()+xlab('Intervals')
+maximum=average_interval5[which.max(average_interval5$mean_interval),]
+print(maximum)
+```
 
 
+## Imputing missing value
+The total number of missing values in the dataset is 2304 . For filling the missing values my strategy is using the mean for corresponding 5-minutes interval.
 
-## Imputing missing values
+```{r}
+na_count <- activity[is.na(activity$steps),]
+print(nrow(na_count))
+filled<- activity %>% group_by(interval) %>% mutate(steps=ifelse(is.na(steps),mean(steps,na.rm = TRUE),steps))
 
+total_steps_filled <-filled  %>% group_by(date) %>% summarize(total_steps=sum(steps,na.rm=TRUE))
+
+mean_day_filled <- filled  %>% group_by(date) %>% summarize(mean_steps=mean(steps,na.rm=TRUE))
+median_day_fileld <- filled  %>% group_by(date) %>% summarize(median_steps=median(steps,na.rm=TRUE))
+
+print(mean_day_filled)
+print(median_day_fileld)
+
+ggplot(data=total_steps_filled, aes(x=total_steps))+geom_histogram()
+
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+library(gridExtra)
+filled$day_type <- ifelse(weekdays(filled$date)=="Saturday" | weekdays(filled$date)=="Sunday","Weekend","Weekday" )
+average_interval5_filled <- filled %>% group_by(day_type,interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
+week_days <- average_interval5_filled %>% filter(day_type=="Weekday")
+weekend <- average_interval5_filled %>% filter(day_type=="Weekend")
+plot1<- ggplot(week_days,aes(x=interval, y=mean_interval))+geom_line()+xlab('Weekday intervals')
+plot2<- ggplot(weekend,aes(x=interval, y=mean_interval))+geom_line()+xlab('Weekend intervals')
+
+grid.arrange(plot1,plot2,ncol=1)
+```
