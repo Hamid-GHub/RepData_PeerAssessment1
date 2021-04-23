@@ -8,7 +8,7 @@ output:
 
 ## Loading and preprocessing the data
 In this section the dataset of activity monitoring from a csv file is loaded into a R dataframe to be ready for our analysis in next parts.
-```{r}
+```{r warning=FALSE, message=FALSE}
 
 activity<-read.csv('activity.csv')
 activity$date <-as.Date(activity$date)
@@ -18,7 +18,7 @@ activity$date <-as.Date(activity$date)
 ## What is mean total number of steps taken per day?
 
 The first table shows the total steps per day. The plot shows the histogram of total number of steps taken each day. The second and third table demonstrates the mean and median step taken per day respectively.
-```{r}
+```{r warning=FALSE, message=FALSE}
 
 library(dplyr)
 library(ggplot2)
@@ -43,7 +43,7 @@ print(median_steps)
 
 ## What is the average daily activity pattern?
 The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average, interval 835 has maximum number of steps across all days.
-```{r}
+```{r warning=FALSE, message=FALSE}
 average_interval5 <- activity %>% group_by(interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
 ggplot(average_interval5,aes(x=interval, y=mean_interval))+geom_line()+xlab('Intervals')
 maximum=average_interval5[which.max(average_interval5$mean_interval),]
@@ -54,7 +54,7 @@ print(maximum)
 ## Imputing missing value
 The total number of missing values in the dataset is 2304 . For filling the missing values my strategy is using the mean for corresponding 5-minutes interval.
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 na_count <- activity[is.na(activity$steps),]
 print(nrow(na_count))
 filled<- activity %>% group_by(interval) %>% mutate(steps=ifelse(is.na(steps),mean(steps,na.rm = TRUE),steps))
@@ -73,7 +73,7 @@ ggplot(data=total_steps_filled, aes(x=total_steps))+geom_histogram()
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(gridExtra)
 filled$day_type <- ifelse(weekdays(filled$date)=="Saturday" | weekdays(filled$date)=="Sunday","Weekend","Weekday" )
 average_interval5_filled <- filled %>% group_by(day_type,interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))

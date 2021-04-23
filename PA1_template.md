@@ -21,38 +21,7 @@ The first table shows the total steps per day. The plot shows the histogram of t
 
 ```r
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 4.0.5
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(ggplot2)
-```
-
-```
-## Warning: package 'ggplot2' was built under R version 4.0.5
-```
-
-```r
 total_steps <- activity %>% group_by(date) %>% summarize(total_steps=sum(steps,na.rm=TRUE))
 
 print(total_steps)
@@ -84,10 +53,6 @@ median_steps <- activity %>% group_by(date) %>% summarize(median_steps=median(st
 
 
 ggplot(data=total_steps, aes(x=total_steps))+geom_histogram()
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
@@ -224,10 +189,6 @@ print(median_day_fileld)
 ggplot(data=total_steps_filled, aes(x=total_steps))+geom_histogram()
 ```
 
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 
@@ -235,33 +196,8 @@ ggplot(data=total_steps_filled, aes(x=total_steps))+geom_histogram()
 
 ```r
 library(gridExtra)
-```
-
-```
-## Warning: package 'gridExtra' was built under R version 4.0.5
-```
-
-```
-## 
-## Attaching package: 'gridExtra'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
-
-```r
 filled$day_type <- ifelse(weekdays(filled$date)=="Saturday" | weekdays(filled$date)=="Sunday","Weekend","Weekday" )
 average_interval5_filled <- filled %>% group_by(day_type,interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
-```
-
-```
-## `summarise()` has grouped output by 'day_type'. You can override using the `.groups` argument.
-```
-
-```r
 week_days <- average_interval5_filled %>% filter(day_type=="Weekday")
 weekend <- average_interval5_filled %>% filter(day_type=="Weekend")
 plot1<- ggplot(week_days,aes(x=interval, y=mean_interval))+geom_line()+xlab('Weekday intervals')
