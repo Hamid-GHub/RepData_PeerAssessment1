@@ -17,7 +17,7 @@ activity$date <-as.Date(activity$date)
 
 ## What is mean total number of steps taken per day?
 
-The first table shows the mean steps per day. The plot shows the histogram of total number of steps taken each day and finally the second table demonstrate the median step taken per day.
+The first table shows the total steps per day. The plot shows the histogram of total number of steps taken each day. The second and third table demonstrates the mean and median step taken per day respectively.
 
 ```r
 library(dplyr)
@@ -55,14 +55,44 @@ library(ggplot2)
 ```r
 total_steps <- activity %>% group_by(date) %>% summarize(total_steps=sum(steps,na.rm=TRUE))
 
+print(total_steps)
+```
 
+```
+## # A tibble: 61 x 2
+##    date       total_steps
+##    <date>           <int>
+##  1 2012-10-01           0
+##  2 2012-10-02         126
+##  3 2012-10-03       11352
+##  4 2012-10-04       12116
+##  5 2012-10-05       13294
+##  6 2012-10-06       15420
+##  7 2012-10-07       11015
+##  8 2012-10-08           0
+##  9 2012-10-09       12811
+## 10 2012-10-10        9900
+## # ... with 51 more rows
+```
 
+```r
 mean_steps <- activity %>% group_by(date) %>% summarize(mean_steps=mean(steps,na.rm=TRUE))
 
 
 
 median_steps <- activity %>% group_by(date) %>% summarize(median_steps=median(steps,na.rm=TRUE))
 
+
+ggplot(data=total_steps, aes(x=total_steps))+geom_histogram()
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 print(mean_steps)
 ```
 
@@ -82,16 +112,6 @@ print(mean_steps)
 ## 10 2012-10-10     34.4  
 ## # ... with 51 more rows
 ```
-
-```r
-ggplot(data=total_steps, aes(x=total_steps))+geom_histogram()
-```
-
-```
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 ```r
 print(median_steps)
@@ -116,11 +136,11 @@ print(median_steps)
 
 
 ## What is the average daily activity pattern?
-The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average intervals 835 has maximum number of steps across all days.
+The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average, intervals 835 has maximum number of steps across all days.
 
 ```r
 average_interval5 <- activity %>% group_by(interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
-ggplot(average_interval5,aes(x=interval, y=mean_interval))+geom_line()
+ggplot(average_interval5,aes(x=interval, y=mean_interval))+geom_line()+xlab('Intervals')
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->

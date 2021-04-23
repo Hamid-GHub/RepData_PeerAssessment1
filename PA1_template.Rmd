@@ -17,7 +17,7 @@ activity$date <-as.Date(activity$date)
 
 ## What is mean total number of steps taken per day?
 
-The first table shows the total steps per day.  The plot shows the histogram of total number of steps taken each day. The second and third table demonstrate the mean and median step taken per day respectively.
+The first table shows the total steps per day. The plot shows the histogram of total number of steps taken each day. The second and third table demonstrates the mean and median step taken per day respectively.
 ```{r}
 
 library(dplyr)
