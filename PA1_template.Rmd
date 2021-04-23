@@ -42,7 +42,7 @@ print(median_steps)
 
 
 ## What is the average daily activity pattern?
-The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average, intervals 835 has maximum number of steps across all days.
+The plot shows average steps taken for different intervals ranging from 0 to 2355. It appears on average, interval 835 has maximum number of steps across all days.
 ```{r}
 average_interval5 <- activity %>% group_by(interval) %>% summarize(mean_interval=mean(steps,na.rm= TRUE))
 ggplot(average_interval5,aes(x=interval, y=mean_interval))+geom_line()+xlab('Intervals')
